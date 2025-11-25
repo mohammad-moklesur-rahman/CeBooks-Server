@@ -1,12 +1,24 @@
 import { eBooksCollection } from "../models/eBooksModel.js";
 
-// * Create Products
 export const createEBooks = async (req, res) => {
-  const doc = req.body;
-  const result = await eBooksCollection().insertOne(doc);
-  res.send(result);
-};
+  try {
+    const data = req.body;
 
+    // Handle uploaded files
+    if (req.files) {
+      if (req.files.pdf) data.pdfUrl = `/uploads/${req.files.pdf[0].filename}`;
+      if (req.files.thumbnail)
+        data.thumbnailUrl = `/uploads/${req.files.thumbnail[0].filename}`;
+    }
+
+    const result = await eBooksCollection().insertOne(data);
+    res.status(201).send(result);
+  } catch (err) {
+    res
+      .status(500)
+      .send({ message: "Failed to create eBook", error: err.message });
+  }
+};
 
 // import { ObjectId } from "mongodb";
 // import { productsCollection } from "../models/productsModel.js";
