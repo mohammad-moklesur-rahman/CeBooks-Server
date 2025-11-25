@@ -1,5 +1,32 @@
 import { eBooksCollection } from "../models/eBooksModel.js";
 
+
+// * Get All eBooks
+export const getAllEBooks = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    const categoryMap = {
+      name: "Islamic Books",
+      name: "English Books",
+      name: "Bangla Books",
+    };
+
+    const mongoCategory = categoryMap[category] || category;
+
+    const filter = mongoCategory
+      ? { category: { $regex: new RegExp(mongoCategory, "i") } }
+      : {};
+
+    const result = await eBooksCollection().find(filter).toArray();
+    res.send(result);
+  } catch (error) {
+    res.status(500).send({ message: "Server error" });
+  }
+};
+
+
+// * Add eBooks
 export const createEBooks = async (req, res) => {
   try {
     const data = req.body;

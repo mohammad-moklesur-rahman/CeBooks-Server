@@ -1,5 +1,5 @@
 import express from "express";
-import { createEBooks } from "../controllers/eBooksController.js";
+import { createEBooks, getAllEBooks } from "../controllers/eBooksController.js";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -33,5 +33,8 @@ router.post(
   ]),
   createEBooks
 );
+
+// * Get all eBooks
+router.get("/", getAllEBooks);
 
 export default router;
