@@ -95,25 +95,9 @@ export const getLatestListing = async (req, res) => {
 
 // * Add eBooks
 export const createEBooks = async (req, res) => {
-  try {
-    const data = req.body;
-
-    // Handle uploaded files - these paths are already correct public paths
-    if (req.files) {
-      // Note: req.files is only populated if you are using 'multer' or similar middleware
-      // and have correctly configured the field names 'pdf' and 'thumbnail'
-      if (req.files.pdf) data.pdfUrl = `/uploads/${req.files.pdf[0].filename}`;
-      if (req.files.thumbnail)
-        data.thumbnailUrl = `/uploads/${req.files.thumbnail[0].filename}`;
-    }
-
-    const result = await eBooksCollection().insertOne(data);
-    res.status(201).send(result);
-  } catch (err) {
-    res
-      .status(500)
-      .send({ message: "Failed to create eBook", error: err.message });
-  }
+  const doc = req.body;
+  const result = await eBooksCollection().insertOne(doc);
+  res.send(result);
 };
 
 // * Delete eBook
