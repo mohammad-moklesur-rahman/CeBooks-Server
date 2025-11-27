@@ -2,6 +2,7 @@ import express from "express";
 import {
   createEBooks,
   getAllEBooks,
+  getEBookById,
   getLatestListing,
   getMyEBooks,
 } from "../controllers/eBooksController.js";
@@ -39,13 +40,16 @@ router.post(
   createEBooks
 );
 
+// * Get My eBooks
+router.get("/my-ebooks", getMyEBooks);
+
 // * Get all eBooks
 router.get("/", getAllEBooks);
 
 // * Get latest eBooks
 router.get("/latest-ebooks", getLatestListing);
 
-// * Get My eBooks
-router.get("/my-ebooks", getMyEBooks);
+// * Get eBook by id
+router.get("/:id", getEBookById);
 
 export default router;

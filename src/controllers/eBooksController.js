@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { eBooksCollection } from "../models/eBooksModel.js";
 
 const getBaseUrl = (req) => {
@@ -5,6 +6,32 @@ const getBaseUrl = (req) => {
   const protocol = req.protocol || "http";
   const host = req.get("host"); // e.g., localhost:5000
   return host ? `${protocol}://${host}` : "";
+};
+
+// * Get eBook By id
+export const getEBookById = async (req, res) => {
+  const { id } = req.params;
+  const result = await eBooksCollection().findOne({ _id: new ObjectId(id) });
+  res.send(result);
+};
+
+// * Get my Listings eBooks
+export const getMyEBooks = async (req, res) => {
+  try {
+    const userEmail = req.query.email;
+
+    if (!userEmail) {
+      return res.status(400).send({ message: "email required" });
+    }
+
+    const myEBooks = await eBooksCollection()
+      .find({ email: userEmail })
+      .toArray();
+
+    res.send(myEBooks);
+  } catch (error) {
+    res.status(500).send({ message: "Failed to fetch" });
+  }
 };
 
 // * Get All eBooks
@@ -66,25 +93,6 @@ export const getLatestListing = async (req, res) => {
   }
 };
 
-// * Get my Listings eBooks
-export const getMyEBooks = async (req, res) => {
-  try {
-    const userEmail = req.query.email;
-
-    if (!userEmail) {
-      return res.status(400).send({ message: "email required" });
-    }
-
-    const myEBooks = await eBooksCollection()
-      .find({ email: userEmail })
-      .toArray();
-
-    res.send(myEBooks);
-  } catch (error) {
-    res.status(500).send({ message: "Failed to fetch" });
-  }
-};
-
 // * Add eBooks
 export const createEBooks = async (req, res) => {
   try {
@@ -107,51 +115,6 @@ export const createEBooks = async (req, res) => {
       .send({ message: "Failed to create eBook", error: err.message });
   }
 };
-
-// import { ObjectId } from "mongodb";
-// import { productsCollection } from "../models/productsModel.js";
-
-// // * Get Product By id
-// export const getProductById = async (req, res) => {
-//   const { id } = req.params;
-//   const result = await productsCollection().findOne({ _id: new ObjectId(id) });
-//   res.send(result);
-// };
-
-
-
-// // * Create Products
-// export const createProduct = async (req, res) => {
-//   const doc = req.body;
-//   const result = await productsCollection().insertOne(doc);
-//   res.send(result);
-// };
-
-// // * Update Product
-// export const updateProduct = async (req, res) => {
-//   const id = req.params.id;
-//   const updatedProduct = req.body;
-
-//   // Ensure valid ObjectId
-//   const filter = { _id: new ObjectId(id) };
-
-//   const updateDoc = {
-//     $set: {
-//       name: updatedProduct.name,
-//       category: updatedProduct.category,
-//       price: updatedProduct.price,
-//       location: updatedProduct.location,
-//       description: updatedProduct.description,
-//       image: updatedProduct.image,
-//       date: updatedProduct.date,
-//       email: updatedProduct.email,
-//     },
-//   };
-
-//   const result = await productsCollection().updateOne(filter, updateDoc);
-
-//   res.send(result);
-// };
 
 // // * Delete product
 // export const deleteProduct = async (req, res) => {
