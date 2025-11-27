@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createEBooks,
+  deleteEBook,
   getAllEBooks,
   getEBookById,
   getLatestListing,
@@ -51,5 +52,8 @@ router.get("/latest-ebooks", getLatestListing);
 
 // * Get eBook by id
 router.get("/:id", getEBookById);
+
+// * delete eBook by id
+router.delete("/delete/:id", deleteEBook);
 
 export default router;

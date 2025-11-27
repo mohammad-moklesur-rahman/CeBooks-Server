@@ -116,11 +116,11 @@ export const createEBooks = async (req, res) => {
   }
 };
 
-// // * Delete product
-// export const deleteProduct = async (req, res) => {
-//   const id = req.params.id;
-//   const result = await productsCollection().deleteOne({
-//     _id: new ObjectId(id),
-//   });
-//   res.send(result);
-// };
+// * Delete eBook
+export const deleteEBook = async (req, res) => {
+  const id = req.params.id;
+  const result = await eBooksCollection().deleteOne({
+    _id: new ObjectId(id),
+  });
+  res.send(result);
+};
